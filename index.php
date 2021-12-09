@@ -14,12 +14,12 @@ $cartText = '('.implode(',' , $_SESSION['cart']).')';
 
 //if cart is empty select all products from database
 if (!count($_SESSION['cart'])) {
-$query='SELECT * FROM products.products';
+$query='SELECT * FROM products';
 }
 
 //if cart is not empty select only elements that are not in the cart
 else {
-$query = 'SELECT * FROM products.products WHERE id NOT IN '.$cartText;
+$query = 'SELECT * FROM products WHERE id NOT IN '.$cartText;
 }
 
 $statement = $connection->query($query);
