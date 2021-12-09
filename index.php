@@ -42,8 +42,7 @@ for ($i = 0; $i <= 10; ++$i) {
 <body>
     <a> <?= 'Indexes of the items in the cart:'.implode(',' , $_SESSION['cart']); ?> </a>
 <a> 
-    <?php
-    echo '<table border=1>';
+    <?= '<table border=1>';
 
     foreach ($statement as $data):
 
