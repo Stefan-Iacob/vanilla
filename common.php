@@ -1,6 +1,6 @@
 <?php
     require 'config.php';
-
+    session_start();
 
     try {
         $connection=new PDO('mysql:host='.host.';dbname='.database, username, password);
@@ -10,5 +10,13 @@
         print"Error! ". $e->getMessage();
         die();
     }
+
+
+
+function array_to_text($array)
+{
+    $text = '('.implode(',' , $array).')';
+    return $text;
+};
 
 ?>

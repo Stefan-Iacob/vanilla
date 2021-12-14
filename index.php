@@ -1,16 +1,17 @@
 <?php
 
-session_start();
+
 
 require 'common.php';
 
 //if cart does not exist, create an array named cart
-if( !isset($_SESSION['cart'])) {
+if( !isset($_SESSION['cart'] )) {
 $_SESSION['cart'] = array();
 }
 
 //cartText stores a string with elements from cart
-$cartText = '('.implode(',' , $_SESSION['cart']).')';
+$cartText=array_to_text($_SESSION['cart']);
+
 //if cart is empty select all products from database
 if (!count($_SESSION['cart'])) {
 $query=$connection->prepare('SELECT * FROM products');
@@ -23,13 +24,12 @@ $query =$connection->prepare('SELECT * FROM products WHERE id NOT IN '.$cartText
 $query->execute();
 }
 
-
 ?>
 
 <!DOCTYPE html>
 <html>
 <head>
-	<title></title>
+	<title>index</title>
 </head>
 <body>
 <a> 
@@ -56,11 +56,12 @@ $query->execute();
     </tr>
 <?php
 if (array_key_exists('button'.$data['id'], $_POST)) {
-    array_push($_SESSION['cart'], $data['id']);
+    $_SESSION['cart'][]= $data['id'];
 }
     endforeach;
  ?>
     </table>
 </a>
+<a href="cart.php">Go to cart</a>
 </body>
 </html>
