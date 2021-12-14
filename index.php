@@ -11,26 +11,18 @@ $_SESSION['cart'] = array();
 
 //cartText stores a string with elements from cart
 $cartText = '('.implode(',' , $_SESSION['cart']).')';
-
 //if cart is empty select all products from database
 if (!count($_SESSION['cart'])) {
-$query='SELECT * FROM products';
+$query=$connection->prepare('SELECT * FROM products');
+$query->execute();
 }
 
 //if cart is not empty select only elements that are not in the cart
 else {
-$query = 'SELECT * FROM products WHERE id NOT IN '.$cartText;
+$query =$connection->prepare('SELECT * FROM products WHERE id NOT IN '.$cartText);
+$query->execute();
 }
 
-$statement = $connection->query($query);
-
-//10 is the maximum number of products that can be displayed(there i should use a function that count all elements from database)
-for ($i = 0; $i <= 10; ++$i) {
-
-    if (isset($_POST['button'.$i])) {
-        $_SESSION['cart'][] = $i;
-    }
-}
 
 ?>
 
@@ -40,29 +32,35 @@ for ($i = 0; $i <= 10; ++$i) {
 	<title></title>
 </head>
 <body>
-    <a> <?= 'Indexes of the items in the cart:'.implode(',' , $_SESSION['cart']); ?> </a>
 <a> 
-    <?= '<table border=1>';
-
-    foreach ($statement as $data):
-
+    <table border=1>
+<?php
+    foreach($query as $data):
         $img = 'photo'.$data['id'].'.jpg';
-        echo '<tr><td>'.'<img src= "'.$img.'" width="100" height="100">';
-        echo '</td><td>'.($data['title']).' ';
-        echo '<br>';
-        echo ($data['description']).' ';
-        echo '<br>';
-        echo 'Price:'.$data['price'].'</td>';
-        echo '<br>';
-        echo '<td><form method="post">
-        <input type="submit" name="button'.$data['id'].'"value="Buy '.$data['title'].'"/></td/tr>';
+?>
+    <tr>
+    <td>
+    <img src= <?= $img ?> width="100" height="100">
+    </td>
+    <td>
+     <?=$data['name'];?>
+     <br>
+     <?=$data['description'];?>
+     <br> 
+     <?='Price '.$data['price'];?> 
+    </td>
+    <td>
+    <form method="POST">
+    <input type="submit" name="button<?=$data['id']?>" value="Buy <?=$data['name']?>">
+    </td>
+    </tr>
+<?php
+if (array_key_exists('button'.$data['id'], $_POST)) {
+    array_push($_SESSION['cart'], $data['id']);
+}
     endforeach;
-     ?>
+ ?>
+    </table>
 </a>
 </body>
 </html>
-
-<?php
-session_unset();
-session_destroy(); 
-?>
